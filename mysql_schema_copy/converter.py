@@ -5,7 +5,15 @@ import re
 
 
 def get_fields_from_schema(schema_str):
-    pass
+    ans = []
+    for line in schema_str.split("\n"):
+        line = line.strip()
+        m = re.match(r" *`([a-z0-9_]+)`", line)
+        if m:
+            print(m.group(1))
+            ans.append(m.group(1))
+
+    return ans
 
 # スネークケースからキャメルケースに変換する
 
