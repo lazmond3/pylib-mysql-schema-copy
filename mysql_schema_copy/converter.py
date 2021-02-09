@@ -1,6 +1,6 @@
 # TODO
 import re
-
+from debug import DEBUG
 # スキーマのstringから、フィールドを取得する。
 
 
@@ -10,7 +10,8 @@ def get_fields_from_schema(schema_str):
         line = line.strip()
         m = re.match(r" *`([a-z0-9_]+)`", line)
         if m:
-            print(m.group(1))
+            if DEBUG:
+                print(m.group(1))
             ans.append(m.group(1))
 
     return ans
