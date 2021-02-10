@@ -1,5 +1,6 @@
 # TODO
 import re
+from enum import Enum
 from debug import DEBUG
 # スキーマのstringから、フィールドを取得する。
 from .str_util import snake_to_lower_camel, snake_to_upper_camel
@@ -142,6 +143,15 @@ def get_field_types_from_schema(schema_str):
             if "," in in_g:
 
 
+class MysqlType(Enum):
+    CHAR=1
+    TEXT=2
+    INT=3
+    DATE=4
+    DATETIME=5
+    FLOAT=6
+    DECIMAL=7
+    VARCHAR=8
 
 
 class FieldType:
@@ -149,8 +159,13 @@ class FieldType:
     """
 
     def __init__(self):
-        self.is_unique = false
+        self.is_unique = False
+        self.is_encrypted = False
+        self.is_nullable = False
         self.unique_fields = []
+        self.type_length = 0 # char varchar decimal など字数制限があるもの
+
+
 
 
 # src[~/github/react/create-insert]
