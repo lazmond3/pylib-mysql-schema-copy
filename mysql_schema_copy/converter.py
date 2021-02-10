@@ -125,7 +125,18 @@ def get_insert_in_mybatis_bulk(schema_str):
     snake_to_upper_camel(table_name) 
 )
     return script
-    
+
+def get_repeatedly_columns(line:str):
+    fields_list = []
+    line = re.match(r"\((.*)\)", line).group(1)
+    while "," in line:
+        m = re.match(r" *`([^`]*)`,.*", line)
+        assert m
+        fields_list.append(m.group(1))
+        line = line[line.find(",")+1:]
+    m = re.match(r" *`([^`]*)`.*", line)
+    fields_list.append(m.group(1))
+    return fields_list
 
 
 def get_field_types_from_schema(schema_str):
@@ -140,8 +151,9 @@ def get_field_types_from_schema(schema_str):
         m = re.match(r"UNIQUE KEY `.*` \((.*)\) ", line) 
         if m:
             in_g = m.group(1)
-            if "," in in_g:
+            if "," in in_g: # 繰り返して取得する処理
                 pass # TODO: NOT IMPLEMENTED 
+
 
 
 class MysqlType(Enum):

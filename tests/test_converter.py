@@ -116,5 +116,13 @@ class BasicTestSuite(unittest.TestCase):
         result = converter.get_insert_in_mybatis_bulk(SCHEMA)
         assert ans == result
 
+    def test_get_repeatedly_columns(self):
+        ans = [
+            "find_id",
+            "result_id",
+            "test_id"
+        ]
+        assert ans == converter.get_repeatedly_columns("(`find_id`, `result_id`, `test_id`)")
+
 if __name__ == '__main__':
     unittest.main()
