@@ -50,7 +50,7 @@ def get_insert_in_mybatis_simple(schema_str):
     """mybatis 単数の Insertを作成する
 
     Args:
-        schema_str (str): CREATE SCHEMA
+        schema_str (str): CREATE SCHEMA'
     """
     table_name = get_table_name(schema_str)
     snake_fields = get_fields_from_schema(schema_str)
@@ -87,7 +87,44 @@ def get_insert_in_mybatis_bulk(schema_str):
     Args:
         schema_str (str): CREATE SCHEM
     """
-    pass
+    table_name = get_table_name(schema_str)
+    arg_property_name = snake_to_lower_camel(table_name)
+    snake_fields = get_fields_from_schema(schema_str)
+    fields = [ "                "   +  
+    l   for l in snake_fields]
+    camel_fields_for_mybatis_escaped = ["                " + "#{" + 
+    arg_property_name + "." + 
+    snake_to_lower_camel(l) + "}" for l in snake_fields]
+    script = """    @Insert(
+        \"\"\"
+        <script>
+            INSERT INTO {}
+            (
+{}
+            )
+            VALUES
+            <foreach item="{}" collection="{}" separator=",">
+            (
+{}
+            )
+            </foreach>
+        </script>
+        \"\"\"
+    )
+    @Options(useGeneratedKeys = true, keyProperty = "{}")
+    fun insertAll({}: List<{}>): Int
+""".format(
+    table_name,
+    ",\n".join(fields),
+    arg_property_name, # snapshot
+    snake_to_lower_camel(table_name) + "s", # snapshots
+    ",\n".join(camel_fields_for_mybatis_escaped),
+    snake_to_lower_camel(snake_fields[0]),
+    snake_to_lower_camel(table_name),
+    snake_to_upper_camel(table_name) 
+)
+    return script
+    
 
 
 # src[/Users/JP26446/github/react/create-insert]

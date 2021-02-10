@@ -40,11 +40,6 @@ class BasicTestSuite(unittest.TestCase):
             "pos.category_id AS pos_category_id"
         ]
         ans_string = ",\n".join(ans_lines)
-        if DEBUG:
-            print("anstarget: ", ans_lines)
-            print(ans_string)
-            print("get: ")
-            print(converter.get_ec_field_names_for_select_in_str(SCHEMA, "pos"))
         assert ans_string == converter.get_ec_field_names_for_select_in_str(SCHEMA, "pos")
 
     def test_get_fields_in_snake_comma_seperated_from_schema(self):
@@ -87,12 +82,39 @@ class BasicTestSuite(unittest.TestCase):
     fun insert(post: Post): Int
 """
         result = converter.get_insert_in_mybatis_simple(SCHEMA)
-        print(result)
-        with open("out1", "w") as f:
-            f.write(ans)
-        with open("out2", "w") as f:
-            f.write(result)
         assert result == ans
+    def test_get_insert_in_mybatis_bulk(self):
+        ans = """    @Insert(
+        \"\"\"
+        <script>
+            INSERT INTO post
+            (
+                post_id,
+                title,
+                content,
+                published,
+                author_id,
+                category_id
+            )
+            VALUES
+            <foreach item="post" collection="posts" separator=",">
+            (
+                #{post.postId},
+                #{post.title},
+                #{post.content},
+                #{post.published},
+                #{post.authorId},
+                #{post.categoryId}
+            )
+            </foreach>
+        </script>
+        \"\"\"
+    )
+    @Options(useGeneratedKeys = true, keyProperty = "postId")
+    fun insertAll(post: List<Post>): Int
+"""
+        result = converter.get_insert_in_mybatis_bulk(SCHEMA)
+        assert ans == result
 
 if __name__ == '__main__':
     unittest.main()
