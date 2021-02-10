@@ -55,9 +55,10 @@ def main():
         schema = get_create_schema(table_name)
         print(schema)
     elif cmd == "select_field":
-        suf = sys.argv[2]
+        table_name = sys.argv[2]
+        suf = sys.argv[3]
         schema = get_create_schema(table_name)
-        fields_string = get_ec_field_names_for_select_in_str(schema)
+        fields_string = get_ec_field_names_for_select_in_str(schema, suf)
         # print(fields)
         clipboard_write_to_clipboard(fields_string)
 
