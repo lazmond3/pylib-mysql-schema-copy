@@ -2,7 +2,7 @@
 import re
 from debug import DEBUG
 # スキーマのstringから、フィールドを取得する。
-
+from .str_util import snake_to_lower_camel
 
 def get_fields_from_schema(schema_str):
     ans = []
@@ -52,7 +52,27 @@ def get_insert_in_mybatis_simple(schema_str):
     Args:
         schema_str (str): CREATE SCHEM
     """
-    pass
+    table_name = get_table_name(schema_str)
+    snake_fields = get_fields_from_schema(schema_str)
+    fields = [ "                " + l   for l in snake_fields]
+    camel_fields_for_mybatis_escaped = ["                " + "#{" + snake_to_lower_camel(l) + "}" for l in snake_fields]
+    script = """    @Insert(
+        \"\"\"
+            INSERT INTO {}
+            (
+{}
+            )
+            VALUES
+            (
+{}
+            )
+        \"\"\"
+""".format(
+    table_name,
+    ",\n".join(fields),
+    ",\n".join(camel_fields_for_mybatis_escaped)
+)
+    return script
 
 
 def get_insert_in_mybatis_bulk(schema_str):
