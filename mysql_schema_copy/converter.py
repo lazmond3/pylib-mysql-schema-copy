@@ -127,11 +127,51 @@ def get_insert_in_mybatis_bulk(schema_str):
     
 
 
-# src[/Users/JP26446/github/react/create-insert]
+def get_field_types_from_schema(schema_str):
+    # primary_key = ""
+    # unique key 製薬のために
+    for line in schema_str.split("\n"):
+        line = line.strip()
+        m = re.match(r" *`PRIMARY KEY \((.*)\)`", line)
+        if m:
+            primary_key = m.group(1)
+            continue
+        m = re.match(r"UNIQUE KEY `.*` \((.*)\) ", line) 
+        if m:
+            in_g = m.group(1)
+            if "," in in_g:
+
+
+
+
+class FieldType:
+    """fieldargument
+    """
+
+    def __init__(self):
+        self.is_unique = false
+        self.unique_fields = []
+
+
+# src[~/github/react/create-insert]
 def get_dummy_insert_sql_from_schema(schema_str):
-    """dummy のsql文を作成する(最難関)
+    """dummy のsql文を作成する(最難関) 
     (すでにjsで定義しているもの)
-    ref: /Users/JP26446/github/react/create-insert
+    ref: ~/github/react/create-insert
+
+    Args:
+        schema_str (str): スキーマ定義
+    """
+    pass
+
+# この関数によって 
+def get_dummy_multiple_insert_sql_from_schema(schema_str, count):
+    """dummy のsql文を作成する(最難関) 
+    (すでにjsで定義しているもの)
+    ref: ~/github/react/create-insert
+
+        unique の処理が必要になる。
+        unique の処理は、対象のフィールド名を リストで所持する。
 
     Args:
         schema_str (str): スキーマ定義
