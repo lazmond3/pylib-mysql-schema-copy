@@ -1,3 +1,4 @@
+import sys
 from .mysql import mysql_get_cur
 from clipboard import clipboard_write_to_clipboard, clipboard_read_from_clipboard
 from pyfzf.pyfzf import FzfPrompt
@@ -26,15 +27,30 @@ def get_one_table():
     return table_names[0]
 
 def main():
-    table_name = get_one_table()
+    argvlen = len(sys.argv[1:])
+    cmd = "main"
     if DEBUG:
-        print("table name: ", table_name)
+        print("argv: ", sys.argv)
+    if argvlen != 0:
+        cmd = sys.argv[1]
+    if cmd == "main":
+        table_name = get_one_table()
+        if DEBUG:
+            print("table name: ", table_name)
 
-    schema = get_create_schema(table_name)
-    if DEBUG:
-        print("schema: ", schema)
-    
-    clipboard_write_to_clipboard(schema)
-    if DEBUG:
-        print("now clipboard: " , )
+        schema = get_create_schema(table_name)
+        if DEBUG:
+            print("schema: ", schema)
+        
+        clipboard_write_to_clipboard(schema)
+        if DEBUG:
+            print("now clipboard: " , )
+    elif cmd == "show":
+        table_name = sys.argv[2]
+        # table_name = get_one_table()
+        if DEBUG:
+            print("table name: ", table_name)
+
+        schema = get_create_schema(table_name)
+        print(schema)
 
