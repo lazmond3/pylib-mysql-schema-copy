@@ -124,5 +124,11 @@ class BasicTestSuite(unittest.TestCase):
         ]
         assert ans == converter.get_repeatedly_columns("(`find_id`, `result_id`, `test_id`)")
 
+    def test_get_repeatedly_columns_single(self):
+        ans = [
+            "find_id"
+        ]
+        assert ans == converter.get_repeatedly_columns("(`find_id`)")
+
 if __name__ == '__main__':
     unittest.main()
