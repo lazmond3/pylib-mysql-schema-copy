@@ -37,13 +37,15 @@ def get_ec_field_names_for_select_in_str(schema_str, suf) -> str:
     ans_string = ",\n".join(lines)
     return ans_string
 
-def get_fields_in_snake_from_schema(schema_str):
+def get_fields_in_snake_comma_seperated_from_schema(schema_str):
     """フィールド名の一覧をsnake caseで取得する
 
     Args:
         schema_str (str): スキーマ定義
     """
-    pass
+    fields = get_fields_from_schema(schema_str)
+
+    return ",\n".join(fields)
 
 
 def get_insert_in_mybatis_simple(schema_str):

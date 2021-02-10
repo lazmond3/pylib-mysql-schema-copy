@@ -47,6 +47,16 @@ class BasicTestSuite(unittest.TestCase):
             print(converter.get_ec_field_names_for_select_in_str(SCHEMA, "pos"))
         assert ans_string == converter.get_ec_field_names_for_select_in_str(SCHEMA, "pos")
 
+    def test_get_fields_in_snake_comma_seperated_from_schema(self):
+        ans_lines = [
+            "id",
+            "title",
+            "content",
+            "published",
+            "authorId",
+            "categoryId"
+        ]
+        assert ",\n".join(ans_lines) == converter.get_fields_in_snake_comma_seperated_from_schema(SCHEMA)
 
 
 if __name__ == '__main__':
