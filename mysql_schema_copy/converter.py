@@ -141,6 +141,7 @@ def get_field_types_from_schema(schema_str):
         if m:
             in_g = m.group(1)
             if "," in in_g:
+                pass # TODO: NOT IMPLEMENTED 
 
 
 class MysqlType(Enum):
