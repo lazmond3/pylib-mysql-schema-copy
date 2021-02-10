@@ -3,6 +3,7 @@ from .mysql import mysql_get_cur
 from clipboard import clipboard_write_to_clipboard, clipboard_read_from_clipboard
 from pyfzf.pyfzf import FzfPrompt
 from debug import DEBUG
+from .converter import get_ec_field_names_for_select_in_str
 
 def get_tables():
     cur = mysql_get_cur()
@@ -53,4 +54,11 @@ def main():
 
         schema = get_create_schema(table_name)
         print(schema)
+    elif cmd == "select_field":
+        suf = sys.argv[2]
+        schema = get_create_schema(table_name)
+        fields_string = get_ec_field_names_for_select_in_str(schema)
+        # print(fields)
+        clipboard_write_to_clipboard(fields_string)
+
 
