@@ -16,16 +16,6 @@ def get_fields_from_schema(schema_str):
 
     return ans
 
-
-# def get_fields_in_camel_from_schema(schema_str):
-#     """フィールド名の一覧を camel case で取得する
-#     (手動でmybatisしたり、SELECT文を作るため)
-
-#     Args:
-#         schema_str (str): スキーマ定義
-#     """
-
-#     pass
 def get_ec_field_names_for_select_in_str(schema_str, suf) -> str:
     fields = get_fields_from_schema( schema_str )
     lines = []
@@ -47,6 +37,14 @@ def get_fields_in_snake_comma_seperated_from_schema(schema_str):
 
     return ",\n".join(fields)
 
+def get_table_name(schema_str):
+    for line in schema_str.split("\n"):
+            line = line.strip()
+            m = re.match(r"CREATE TABLE `([a-zA-Z0-9_]+)`", line)
+            if m:
+                if DEBUG:
+                    print(m.group(1))
+                return m.group(1)
 
 def get_insert_in_mybatis_simple(schema_str):
     """mybatis 単数の Insertを作成する

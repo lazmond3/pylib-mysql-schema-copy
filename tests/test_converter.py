@@ -58,6 +58,8 @@ class BasicTestSuite(unittest.TestCase):
         ]
         assert ",\n".join(ans_lines) == converter.get_fields_in_snake_comma_seperated_from_schema(SCHEMA)
 
+    def test_get_table_name(self):
+        assert "Post" == converter.get_table_name(SCHEMA)
 
 if __name__ == '__main__':
     unittest.main()
