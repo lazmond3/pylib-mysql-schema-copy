@@ -8,7 +8,7 @@ def get_fields_from_schema(schema_str):
     ans = []
     for line in schema_str.split("\n"):
         line = line.strip()
-        m = re.match(r" *`([a-z0-9_]+)`", line)
+        m = re.match(r" *`([a-zA-Z0-9_]+)`", line)
         if m:
             if DEBUG:
                 print(m.group(1))
@@ -17,15 +17,25 @@ def get_fields_from_schema(schema_str):
     return ans
 
 
-def get_fields_in_camel_from_schema(schema_str):
-    """フィールド名の一覧を camel case で取得する
-    (手動でmybatisしたり、SELECT文を作るため)
+# def get_fields_in_camel_from_schema(schema_str):
+#     """フィールド名の一覧を camel case で取得する
+#     (手動でmybatisしたり、SELECT文を作るため)
 
-    Args:
-        schema_str (str): スキーマ定義
-    """
-    pass
+#     Args:
+#         schema_str (str): スキーマ定義
+#     """
 
+#     pass
+def get_ec_field_names_for_select_in_str(schema_str, suf) -> str:
+    fields = get_fields_from_schema( schema_str )
+    lines = []
+    for f in fields:
+        li = f"{suf}.{f} AS {suf}_{f}"
+        lines.append(li)
+    if DEBUG:
+        print("lines: ", lines)
+    ans_string = ",\n".join(lines)
+    return ans_string
 
 def get_fields_in_snake_from_schema(schema_str):
     """フィールド名の一覧をsnake caseで取得する
