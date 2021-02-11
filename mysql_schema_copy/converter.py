@@ -139,22 +139,23 @@ def get_repeatedly_columns(line:str):
     return fields_list
 
 
-def get_field_types_from_schema(schema_str):
+def get_unique_keys(schema_str):
     # unique key 製薬のために
     primary_key = ""
     unique_keys = []
     for line in schema_str.split("\n"):
         line = line.strip()
-        m = re.match(r" *`PRIMARY KEY \((.*)\)`", line)
+        m = re.match(r" *PRIMARY KEY *\(`(.*)`\)", line)
         if m:
             primary_key = m.group(1)
             unique_keys.append([primary_key])
             continue
-        m = re.match(r"UNIQUE KEY `.*` \((.*)\) ", line) 
+        m = re.match(r" *UNIQUE KEY `.*` \((.*)\).*", line) 
+        print("after m: ", m)
         if m:
             in_g = m.group(1)
-            unique_list = get_repeatedly_columns(in_g)
-            unique_keys.appned(unique_list)
+            unique_list = get_repeatedly_columns("(" + in_g + ")")
+            unique_keys.append(unique_list)
     return unique_keys
 
 class MysqlType(Enum):

@@ -14,7 +14,8 @@ SCHEMA = """CREATE TABLE `post` (
   `author_id` int DEFAULT NULL,
   `category_id` int DEFAULT NULL,
   PRIMARY KEY (`post_id`),
-  KEY `author_id` (`author_id`),
+  UNIQUE KEY `author_id` (`post_id`, `author_id`),
+  UNIQUE KEY `category_id` (`category_id`),
   KEY `category_id` (`category_id`),
   CONSTRAINT `post_ibfk_1` FOREIGN KEY (`author_id`) REFERENCES `User` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
@@ -129,6 +130,17 @@ class BasicTestSuite(unittest.TestCase):
             "find_id"
         ]
         assert ans == converter.get_repeatedly_columns("(`find_id`)")
+    def test_get_unique_keys(self):
+        ans = [
+            ["post_id"],
+            ["post_id", "author_id"],
+            ["category_id"]
+        ]
+        res = converter.get_unique_keys(SCHEMA)
+        print(res)
+        for i in range(len(ans)):
+            for j in range(len(ans[i])):
+                assert ans[i][j] == res[i][j]
 
 if __name__ == '__main__':
     unittest.main()
