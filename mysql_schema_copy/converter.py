@@ -140,21 +140,22 @@ def get_repeatedly_columns(line:str):
 
 
 def get_field_types_from_schema(schema_str):
-    # primary_key = ""
     # unique key 製薬のために
+    primary_key = ""
+    unique_keys = []
     for line in schema_str.split("\n"):
         line = line.strip()
         m = re.match(r" *`PRIMARY KEY \((.*)\)`", line)
         if m:
             primary_key = m.group(1)
+            unique_keys.append([primary_key])
             continue
         m = re.match(r"UNIQUE KEY `.*` \((.*)\) ", line) 
         if m:
             in_g = m.group(1)
-            if "," in in_g: # 繰り返して取得する処理
-                pass # TODO: NOT IMPLEMENTED 
-
-
+            unique_list = get_repeatedly_columns(in_g)
+            unique_keys.appned(unique_list)
+    return unique_keys
 
 class MysqlType(Enum):
     CHAR=1
