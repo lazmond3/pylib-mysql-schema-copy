@@ -26,7 +26,7 @@ def load_requires_from_file(filepath):
 
 setup(
     name='lazmond3-pylib-mysql-schema-copy',
-    version='1.1.1',
+    version='1.2.0',
     description='schema copy pylib mysql',
     long_description=readme,
     author='lazmond3',
