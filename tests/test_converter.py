@@ -141,6 +141,8 @@ class BasicTestSuite(unittest.TestCase):
         for i in range(len(ans)):
             for j in range(len(ans[i])):
                 assert ans[i][j] == res[i][j]
+    def test_calc_type_from_schema(self):
+        converter.calc_type_from_schema(SCHEMA )
 
 if __name__ == '__main__':
     unittest.main()

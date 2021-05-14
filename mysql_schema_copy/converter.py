@@ -11,8 +11,6 @@ def get_fields_from_schema(schema_str):
         line = line.strip()
         m = re.match(r" *`([a-zA-Z0-9_]+)`", line)
         if m:
-            if DEBUG:
-                print(m.group(1))
             ans.append(m.group(1))
 
     return ans
@@ -23,8 +21,6 @@ def get_ec_field_names_for_select_in_str(schema_str, suf) -> str:
     for f in fields:
         li = f"{suf}.{f} AS {suf}_{f}"
         lines.append(li)
-    if DEBUG:
-        print("lines: ", lines)
     ans_string = ",\n".join(lines)
     return ans_string
 
@@ -43,8 +39,6 @@ def get_table_name(schema_str):
             line = line.strip()
             m = re.match(r"CREATE TABLE `([a-zA-Z0-9_]+)`", line)
             if m:
-                if DEBUG:
-                    print(m.group(1))
                 return m.group(1)
 
 def get_insert_in_mybatis_simple(schema_str):
@@ -151,7 +145,6 @@ def get_unique_keys(schema_str):
             unique_keys.append([primary_key])
             continue
         m = re.match(r" *UNIQUE KEY `.*` \((.*)\).*", line) 
-        print("after m: ", m)
         if m:
             in_g = m.group(1)
             unique_list = get_repeatedly_columns("(" + in_g + ")")
@@ -181,6 +174,26 @@ class FieldType:
         self.type_length = 0 # char varchar decimal など字数制限があるもの
 
 
+# WIP: 
+def calc_type_from_schema(schema_str):
+    fields = [] # list of FieldType
+    uniques = get_unique_keys(schema_str)
+    for line in schema_str.split("\n"):
+        line = line.strip()
+        m = re.match(r" *`([a-zA-Z0-9_]+)`", line)
+        if m:
+            if DEBUG:
+                print(m.group(1))
+            typ_m = re.match(r"`.*` ([a-z()0-9]+).*", line)
+            print("type_m: ", typ_m.group(1))
+
+            # もし "(" が小ｋに入っていたら
+            fields.append(m.group(1))
+
+
+    print("ans fields: ", fields)
+    return fields
+    
 
 
 # src[~/github/react/create-insert]
